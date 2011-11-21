@@ -1,0 +1,10 @@
+h1. About
+
+p. Parallel implementation of the Simulated Annealing Methaheuristic using the pthread lib, for solving the Traveling Salesman Problem. It uses the Nearest Neighbour heuristic to go to the next city.
+
+h1. How to
+
+<pre>
+	$ make
+	$ ./SA [tsp-instance-file]
+</pre>
