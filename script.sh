@@ -1,9 +1,7 @@
 #!/bin/bash
 
 
-if [[ $1 == 1 ]]; then
-	OUTDIR="results/"
-fi
+OUTDIR="results/"
 
 for file in instances/*
 do
