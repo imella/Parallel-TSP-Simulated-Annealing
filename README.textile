@@ -5,9 +5,8 @@ p. Parallel implementation of the Simulated Annealing Methaheuristic using the p
 h1. How to
 
 h2. Run one instance
-<pre>
-	$ make
-	$ ./SA [tsp-instance-file]
+<pre>$ make
+$ ./SA [tsp-instance-file]
 </pre>
 
 p. The result is displayed in STDOUT
