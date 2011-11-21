@@ -4,7 +4,17 @@ p. Parallel implementation of the Simulated Annealing Methaheuristic using the p
 
 h1. How to
 
+h2. Run one instance
 <pre>
 	$ make
 	$ ./SA [tsp-instance-file]
 </pre>
+
+p. The result is displayed in STDOUT
+
+h2. Run all instances
+<pre>
+	$ ./script.sh
+</pre>
+
+p. The results are saved in the results/ folder.
