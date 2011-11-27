@@ -63,7 +63,6 @@ int main(int argc, char **argv)
 	pthread_t *threads;
 	threads = (pthread_t *)malloc(sizeof(pthread_t)*POOL);
 	
-	//srand(time(NULL));
 	temperature = 100000;
 	matrix = readEuc2D(argv[1]);
 
@@ -72,10 +71,6 @@ int main(int argc, char **argv)
 	for (i = 0; i < ins.dimension;i++)
 		bestTour[i] = i;
 	
-	//printMatrix();
-	//currentTour = nearestNeighbour();
-	//printf("Initial Distance: %lf\n", tourCost(currentTour));
-	//printTour(currentTour);
 	
 	pthread_mutex_init(&mutex,NULL);
 	
@@ -83,7 +78,6 @@ int main(int argc, char **argv)
 	{
 		if (pthread_create(&threads[i], NULL, SimulatedAnnealing, (void *)i))
         {
-                //printf("Cannot create pthread\n");
                 exit(-1);
         }
 	}
@@ -92,15 +86,12 @@ int main(int argc, char **argv)
 	{
 		if (pthread_join(threads[i], &status))
 		{
-			//printf("Cannot join thread\n");
 			exit(-1);
 		}
-		//printf("Join complete on thread %d with status %ld\n", i, (long)status);
 	}
 	pthread_mutex_destroy(&mutex);
 	
 	printf("Best Distance: %lf\n", tourCost(bestTour));
-	//printTour(bestTour);
 	
 	return 0;
 }
@@ -156,7 +147,6 @@ double** readEuc2D(char* name)
 	for (i = 0; i < ins.dimension; i++)
 		matrix[i] = (double *)malloc(sizeof(double)*(ins.dimension));
 	
-	//matrix[0][0] = 0;
 	
 	for (i = 0; i < ins.dimension; i++)
 	{
@@ -189,7 +179,6 @@ int* nearestNeighbour()
 	int nearestIndex;
 	int i,j;
 	
-	//srand(time(NULL));
 	visited = (int*) malloc(ins.dimension*sizeof(int));
 	tour    = (int*) malloc(ins.dimension*sizeof(int));
 	for(i=0;i<ins.dimension;i++) visited[i] = 0;
@@ -236,12 +225,7 @@ void swap(int *currentTour, int *nextTour)
 	nextTour[first] = nextTour[second];
 	nextTour[second] = auxiliar;
 	
-	/*
-	printf("Current Tour: ");
-	printTour(currentTour);
-	printf("First: %d Second: %d\n", first, second);
-	printTour(nextTour);
-	*/
+
 }
 
 void* SimulatedAnnealing(void *id)
@@ -249,24 +233,17 @@ void* SimulatedAnnealing(void *id)
 	int *currentTour;
 	int *nextTour;
 	
-	//double temperature;
 	
 	double distance;
 	double delta;
 	int i;
 	long seed;
-	//printf("%d seed:%\n", );
 	
-	//pthread_mutex_lock(&mutex);
 	seed = time(NULL);
-	//printf("ID:%d seedBefore:%ld seedAfter:%ld\n", (int)id,seed,seed*(int)id*12345);
 	srand(seed+(int)id*12345);
-	//pthread_mutex_unlock(&mutex);
 	
-	//temperature = 100000;
 	
 	currentTour = nearestNeighbour();
-	//printf("%d Initial Distance: %lf\n", (int)id,tourCost(currentTour));
 	
 	
 	distance = tourCost(currentTour);
@@ -279,27 +256,19 @@ void* SimulatedAnnealing(void *id)
 		
 		swap(currentTour, nextTour);
 		delta = tourCost(nextTour) - distance;
-		//delta *= -1;
 		if (((delta < 0) || (distance > 0)) && (exp(-delta/temperature) > (double)rand()/RAND_MAX))
 		{
-			//pthread_mutex_lock(&mutex);
 			for (i = 0; i < ins.dimension; i++)
 				currentTour[i] = nextTour[i];
 			distance = delta + distance;
-			//pthread_mutex_unlock(&mutex);
 		}
 		
 		pthread_mutex_lock(&mutex);
 		temperature *= COOLING;
 		pthread_mutex_unlock(&mutex);
 		//End Critical Section
-		//free(nextTour);
 		
-		//printf("Temperature: %lf\n", temperature);
 	}
-	//printf("ThreadID: %d Shortest Distance: %lf\n", (int)id, distance);
-	//printf("Thread:IDDimension: %d\n", ins.dimension);
-	//printTour(currentTour);
 	
 	pthread_mutex_lock(&mutex);
 	if (tourCost(bestTour) > tourCost(currentTour))
